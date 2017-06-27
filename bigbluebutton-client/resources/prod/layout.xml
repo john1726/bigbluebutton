@@ -1,13 +1,36 @@
 <?xml version="1.0"?>
 <layouts>
-  <layout name="bbb.layout.name.defaultlayout" default="true">
+  <layout name="One on One Layout" default="true">
+    <window name="NotesWindow" hidden="true" width="0.7" height="1" x="0" y="0" draggable="false" resizable="false"/>
+    <window name="UsersWindow" width="0.2" height="0.28" x="0" y="0.0" order="0"/>
+    <window name="ChatWindow" width="0.2" height="0.20" x="0" y="0.28" order="0"/>
+    <window name="VideoDock" width="0.2" height="0.45" x="0" y="0.55" order="0"/>
+    <window name="BroadcastWindow" hidden="true" draggable="false" resizable="false"/>
+    <window name="PresentationWindow" width="0.8" height="0.9946808510638298" x="0.20017366136034732" y="0" />
+    <window name="CaptionWindow" hidden="true" width="0.513" height="0.308" x="0.180" y="0.692" />
+    <window name="ViewersWindow" hidden="true" draggable="false" resizable="false" />
+    <window name="ListenersWindow" hidden="true" draggable="false" resizable="false"/>
+  </layout>
+  <layout name="Group Layout">
     <window name="NotesWindow" hidden="true" width="0.7" height="1" x="0" y="0" draggable="false" resizable="false"/>
     <window name="BroadcastWindow" hidden="true" draggable="false" resizable="false"/>
-    <window name="PresentationWindow" width="0.513" height="1" x="0.180" y="0" />
+    <window name="PresentationWindow" width="0.6637481910274964" height="0.9946808510638298" x="0.18017366136034732" y="0" />
     <window name="CaptionWindow" hidden="true" width="0.513" height="0.308" x="0.180" y="0.692" />
-    <window name="VideoDock" width="0.177" height="0.313" x="0" y="0.687" minWidth="280" />
-    <window name="ChatWindow" width="0.304" height="1" x="0.696" y="0" />
-    <window name="UsersWindow" width="0.177" height="0.679" x="0" y="0" minWidth="280" />
+    <window name="VideoDock" width="0.1772793053545586" height="0.74351063829787234" x="0" y="0.2545212765957446" minWidth="280" />
+    <window name="UsersWindow" width="0.1531837916063676" height="0.9960106382978723" x="0.8468162083936325" y="0" />
+    <window name="ChatWindow" width="0.1772793053545586" height="0.2045212765957446" x="0" y="0.0" minWidth="280" />
+    <window name="ViewersWindow" width="0.1772793053545586" height="0.33643617021276595" x="0" y="0" />
+    <window name="ListenersWindow" width="0.1772793053545586" height="0.33643617021276595" x="0" y="0.34308510638297873" />
+  </layout>
+  <layout name="Balanced Layout">
+    <window name="NotesWindow" hidden="true" width="0.7" height="1" x="0" y="0" draggable="false" resizable="false"/>
+    <window name="BroadcastWindow" hidden="true" draggable="false" resizable="false"/>
+    <window name="PresentationWindow" width="0.5137481910274964" height="0.9946808510638298" x="0.18017366136034732" y="0" />
+    <window name="VideoDock" width="0.1772793053545586" height="0.63851063829787234" x="0" y="0.5125" minWidth="280" />
+    <window name="ChatWindow" width="0.3031837916063676" height="0.9960106382978723" x="0.6968162083936325" y="0" />
+    <window name="UsersWindow" width="0.1772793053545586" height="0.5095212765957446" x="0" y="0.0" minWidth="280" />
+    <window name="ViewersWindow" width="0.1772793053545586" height="0.33643617021276595" x="0" y="0" />
+    <window name="ListenersWindow" width="0.1772793053545586" height="0.33643617021276595" x="0" y="0.34308510638297873" />
   </layout>
   <layout name="bbb.layout.name.closedcaption">
     <window name="NotesWindow" hidden="true" width="0.7" height="1" x="0" y="0" draggable="false" resizable="false"/>
@@ -26,6 +49,8 @@
     <window name="PresentationWindow" minimized="true" order="1" hidden="true" />
     <window name="UsersWindow" minimized="true" hidden="true" order="2"/>
     <window name="CaptionWindow" hidden="true" width="0.513" height="0.308" x="0.180" y="0.692" />
+    <window name="ViewersWindow" hidden="true" draggable="false" resizable="false" />
+    <window name="ListenersWindow" hidden="true" draggable="false" resizable="false"/>
   </layout>
   <layout name="bbb.layout.name.webcamsfocus">
     <window name="NotesWindow" hidden="true" width="0.7" height="1" x="0" y="0" draggable="false" resizable="false"/>
