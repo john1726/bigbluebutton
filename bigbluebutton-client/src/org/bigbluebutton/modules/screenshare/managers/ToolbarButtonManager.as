@@ -40,7 +40,7 @@ package org.bigbluebutton.modules.screenshare.managers
 		}
 													
 		public function addToolbarButton():void {
-      LOGGER.debug("DeskShare::addToolbarButton");
+                        LOGGER.debug("DeskShare::addToolbarButton");
 			
 			if ((button != null) && (!buttonShownOnToolbar)) {
 				button = new ToolbarButton();
