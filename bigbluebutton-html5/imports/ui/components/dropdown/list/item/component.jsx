@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from '../styles';
 import _ from 'lodash';
 import cx from 'classnames';
@@ -10,6 +11,9 @@ const propTypes = {
   description: PropTypes.string,
 };
 
+const defaultProps = {
+};
+
 export default class DropdownListItem extends Component {
   constructor(props) {
     super(props);
@@ -18,11 +22,11 @@ export default class DropdownListItem extends Component {
   }
 
   renderDefault() {
-    let children = [];
-    const { icon, label, } = this.props;
+    const children = [];
+    const { icon, label } = this.props;
 
     return [
-      (icon ? <Icon iconName={icon} key="icon" className={styles.itemIcon}/> : null),
+      (icon ? <Icon iconName={icon} key="icon" className={styles.itemIcon} /> : null),
       (<span className={styles.itemLabel} key="label">{label}</span>),
     ];
   }
@@ -41,10 +45,10 @@ export default class DropdownListItem extends Component {
         aria-describedby={this.descID}
         className={cx(styles.item, className)}
         style={style}
-        role="menuitem">
+        role="menuitem"
+      >
         {
-          children ? children
-          : this.renderDefault()
+          children || this.renderDefault()
         }
         {
           label ?
@@ -57,8 +61,9 @@ export default class DropdownListItem extends Component {
           : null
         }
       </li>
-      );
+    );
   }
 }
 
 DropdownListItem.propTypes = propTypes;
+DropdownListItem.defaultProps = defaultProps;

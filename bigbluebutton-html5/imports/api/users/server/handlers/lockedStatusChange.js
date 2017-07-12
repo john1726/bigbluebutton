@@ -21,7 +21,7 @@ export default function handleLockedStatusChange({ payload }) {
   const User = Users.findOne(selector);
   if (!User) {
     throw new Meteor.Error(
-      'user-not-found', `You need a valid user to be able to set presenter`);
+      'user-not-found', 'You need a valid user to be able to set presenter');
   }
 
   const modifier = {
@@ -41,7 +41,6 @@ export default function handleLockedStatusChange({ payload }) {
           && !User.user.voiceUser.muted
           && User.user.voiceUser.joined
           && isLocked) {
-
         const credentials = {
           meetingId,
           requesterUserId: userId,
@@ -50,9 +49,10 @@ export default function handleLockedStatusChange({ payload }) {
         muteToggle(credentials, userId, true);
       }
 
-      return Logger.info(`Assigned locked status '${isLocked ? 'locked' : 'unlocked'}' id=${userId} meeting=${meetingId}`);
+      return Logger.info(`Assigned locked status '${isLocked
+        ? 'locked' : 'unlocked'}' id=${userId} meeting=${meetingId}`);
     }
   };
 
   return Users.update(selector, modifier, cb);
-};
+}

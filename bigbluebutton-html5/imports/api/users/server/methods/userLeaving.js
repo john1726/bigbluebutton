@@ -4,6 +4,7 @@ import RedisPubSub from '/imports/startup/server/redis';
 import Logger from '/imports/startup/server/logger';
 import { isAllowedTo } from '/imports/startup/server/userPermissions';
 import Users from '/imports/api/users';
+import Meetings from '/imports/api/meetings';
 
 import setConnectionStatus from '../modifiers/setConnectionStatus';
 import listenOnlyToggle from './listenOnlyToggle';
@@ -27,9 +28,15 @@ export default function userLeaving(credentials, userId) {
   };
 
   const User = Users.findOne(selector);
-  if (!User) {
-    Logger.warn(`Could not find ${userId} in ${meetingId}: cannot complete userLeaving action`);
+  const Meeting = Meetings.findOne({ meetingId });
+
+  if(!Meeting) {
     return;
+  }
+
+  if (!User) {
+    throw new Meteor.Error(
+      'user-not-found', `Could not find ${userId} in ${meetingId}: cannot complete userLeaving`);
   }
 
   if (User.user.connection_status === OFFLINE_CONNECTION_STATUS) {
@@ -60,11 +67,11 @@ export default function userLeaving(credentials, userId) {
     Users.update(selector, modifier, cb);
   }
 
-  let payload = {
+  const payload = {
     meeting_id: meetingId,
     userid: userId,
   };
 
   Logger.verbose(`User '${requesterUserId}' left meeting '${meetingId}'`);
   return RedisPubSub.publish(CHANNEL, EVENT_NAME, payload);
-};
+}

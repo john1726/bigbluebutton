@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, cloneElement } from 'react';
+import React, { Component, cloneElement } from 'react';
+import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -13,6 +14,7 @@ import { withModalMounter } from '../modal/service';
 import Auth from '/imports/ui/services/auth';
 import Users from '/imports/api/users';
 import Breakouts from '/imports/api/breakouts';
+import Meetings from '/imports/api/meetings';
 
 import App from './component';
 import NavBarContainer from '../nav-bar/container';
@@ -31,14 +33,18 @@ const intlMessages = defineMessages({
   kickedMessage: {
     id: 'app.error.kicked',
     description: 'Message when the user is kicked out of the meeting',
-    defaultMessage: 'You have been kicked out of the meeting',
+  },
+
+  endMeetingMessage: {
+    id: 'app.error.meeting.ended',
+    description: 'You have logged out of the conference',
   },
 });
 
 class AppContainer extends Component {
   render() {
     // inject location on the navbar container
-    let navbarWithLocation = cloneElement(this.props.navbar, { location: this.props.location });
+    const navbarWithLocation = cloneElement(this.props.navbar, { location: this.props.location });
 
     return (
       <App {...this.props} navbar={navbarWithLocation}>
@@ -46,36 +52,47 @@ class AppContainer extends Component {
       </App>
     );
   }
-};
+}
 
 export default withRouter(injectIntl(withModalMounter(createContainer((
   { router, intl, mountModal, baseControls }) => {
-    // Check if user is kicked out of the session
-    Users.find({ userId: Auth.userID }).observeChanges({
-      changed(id, fields) {
-        if (fields.user && fields.user.kicked) {
-          Auth.clearCredentials()
-            .then(() => {
-              router.push('/error/403');
-              baseControls.updateErrorState(
-                intl.formatMessage(intlMessages.kickedMessage),
-              );
-            });
-        }
-      },
-    });
 
-    // Close the widow when the current breakout room ends
-    Breakouts.find({ breakoutMeetingId: Auth.meetingID }).observeChanges({
-      removed(old) {
-        Auth.clearCredentials().then(window.close);
-      },
-    });
+  // Displayed error messages according to the mode (kicked, end meeting)
+  let sendToError = (code, message) => {
+    Auth.clearCredentials()
+        .then(() => {
+          router.push(`/error/${code}`);
+          baseControls.updateErrorState(message);
+        });
+  };
 
-    return {
-      sidebar: getCaptionsStatus() ? <ClosedCaptionsContainer /> : null,
-      fontSize: getFontSize(),
-    };
-  }, AppContainer))));
+  // Check if user is kicked out of the session
+  Users.find({ userId: Auth.userID }).observeChanges({
+    changed(id, fields) {
+      if (fields.user && fields.user.kicked) {
+        sendToError(403, intl.formatMessage(intlMessages.kickedMessage));
+      }
+    },
+  });
+
+  // forcelly logged out when the meeting is ended
+  Meetings.find({ meetingId: Auth.meetingID }).observeChanges({
+    removed(old) {
+      sendToError(410, intl.formatMessage(intlMessages.endMeetingMessage));
+    },
+  });
+
+  // Close the widow when the current breakout room ends
+  Breakouts.find({ breakoutMeetingId: Auth.meetingID }).observeChanges({
+    removed(old) {
+      Auth.clearCredentials().then(window.close);
+    },
+  });
+
+  return {
+    closedCaption: getCaptionsStatus() ? <ClosedCaptionsContainer /> : null,
+    fontSize: getFontSize(),
+  };
+}, AppContainer))));
 
 AppContainer.defaultProps = defaultProps;
