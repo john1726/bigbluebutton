@@ -99,7 +99,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 var bitmapData:BitmapData = new BitmapData(stage.width, stage.height);
                                 bitmapData.draw(stage, new Matrix());
 
-                                var img = jpgEncoder.encode(bitmapData);
+                                var img:ByteArray = jpgEncoder.encode(bitmapData);
             
                                 var file:FileReference = new FileReference();
                                 file.save(img, "capture.jpg");
