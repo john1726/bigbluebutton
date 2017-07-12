@@ -98,10 +98,6 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
     <MethodInvoker generator="{UserService}" method="kickUser" arguments="{event}" />
   </EventHandlers>
   
-  <EventHandlers type="{BBBEvent.PRINT_SLIDES}">
-    <MethodInvoker generator="{UserService}" method="printingSlides" arguments="{event}" />
-  </EventHandlers>
-
   <EventHandlers type="{BBBEvent.CHANGE_RECORDING_STATUS}">
     <MethodInvoker generator="{UserService}" method="changeRecordingStatus" arguments="{event}" />
   </EventHandlers>

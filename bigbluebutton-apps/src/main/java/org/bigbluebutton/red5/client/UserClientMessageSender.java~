@@ -13,7 +13,6 @@ import org.bigbluebutton.common.messages.GetUsersReplyMessage;
 import org.bigbluebutton.common.messages.LockLayoutMessage;
 import org.bigbluebutton.common.messages.PresenterAssignedMessage;
 import org.bigbluebutton.common.messages.RecordingStatusChangedMessage;
-import org.bigbluebutton.common.messages.PrintButtonPressedMessage;
 import org.bigbluebutton.common.messages.UserEmojiStatusMessage;
 import org.bigbluebutton.common.messages.UserJoinedMessage;
 import org.bigbluebutton.common.messages.UserJoinedVoiceMessage;
@@ -149,12 +148,6 @@ public class UserClientMessageSender {
             UserVoiceTalkingMessage uvtm = UserVoiceTalkingMessage.fromJson(message);
             if (uvtm != null) {
               processUserVoiceTalkingMessage(uvtm);
-            }
-            break;
-          case PrintButtonPressedMessage.PRINT_SLIDES:
-            PrintButtonPressedMessage pbpm = PrintButtonPressedMessage.fromJson(message);
-            if (pbpm != null) {
-              processPrintButtonPressedMessage(pbpm);
             }
             break;
           case RecordingStatusChangedMessage.RECORDING_STATUS_CHANGED:
@@ -491,19 +484,6 @@ public class UserClientMessageSender {
     message.put("msg", gson.toJson(args));
 
     BroadcastClientMessage m = new BroadcastClientMessage(msg.meetingId, "voiceUserTalking", message);
-    service.sendMessage(m);		
-  }
-
-  private void processPrintButtonPressedMessage(PrintButtonPressedMessage msg) {	  	
-    Map<String, Object> args = new HashMap<String, Object>();	
-    args.put("userId", msg.userId);
-    args.put("printing", msg.printing);
-
-    Map<String, Object> message = new HashMap<String, Object>();
-    Gson gson = new Gson();
-    message.put("msg", gson.toJson(args));
-
-    BroadcastClientMessage m = new BroadcastClientMessage(msg.meetingId, "printButtonPressed", message);
     service.sendMessage(m);		
   }
 

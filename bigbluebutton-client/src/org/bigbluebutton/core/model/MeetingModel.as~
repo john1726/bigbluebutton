@@ -48,7 +48,7 @@ package org.bigbluebutton.core.model
     }
 
     public function set printing(print: Boolean):void {
-      //_meeting.isPrinting = print;
+      _meeting.isPrinting = print;
     }
     
     public function set meetingMuted(muted:Boolean):void {

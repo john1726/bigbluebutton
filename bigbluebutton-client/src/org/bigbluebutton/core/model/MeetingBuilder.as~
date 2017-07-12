@@ -10,7 +10,6 @@ package org.bigbluebutton.core.model
     internal var defaultAvatarUrl:String;
     internal var dialNumber:String;
     internal var recorded:Boolean;
-    internal var printed:Boolean;
     internal var defaultLayout:String;    
     internal var welcomeMessage:String;
     internal var modOnlyMessage:String;
@@ -49,11 +48,6 @@ package org.bigbluebutton.core.model
     
     public function withRecorded(value: Boolean):MeetingBuilder {
       recorded = value;
-      return this;
-    }
-
-    public function withPrinted(value: Boolean):MeetingBuilder {
-      printed = value;
       return this;
     }
    

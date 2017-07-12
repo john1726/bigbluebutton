@@ -58,9 +58,6 @@ package org.bigbluebutton.main.model.users {
 		
 		[Bindable]
 		public var record:Boolean;
-
-		[Bindable]
-		public var print:Boolean;
 		
 		private static const LOGGER:ILogger = getClassLogger(Conference);
 		

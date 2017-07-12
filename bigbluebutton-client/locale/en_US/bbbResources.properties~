@@ -91,7 +91,6 @@ bbb.mainToolbar.settingsBtn = Settings
 bbb.mainToolbar.settingsBtn.toolTip = Open Settings
 bbb.mainToolbar.shortcutBtn = Shortcut Keys
 bbb.mainToolbar.shortcutBtn.toolTip = Open Shortcut Keys Window
-bbb.mainToolbar.printBtn.toolTip.print = Print slides
 bbb.mainToolbar.recordBtn.toolTip.start = Start recording
 bbb.mainToolbar.recordBtn.toolTip.stop = Stop recording
 bbb.mainToolbar.recordBtn.toolTip.recording = The session is being recorded

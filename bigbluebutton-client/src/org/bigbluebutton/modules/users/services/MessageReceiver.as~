@@ -125,9 +125,6 @@ package org.bigbluebutton.modules.users.services
         case "recordingStatusChanged":
           handleRecordingStatusChanged(message);
           break;
-        case "printButtonPressed":
-          handlePrintButtonPressed(message);
-          break;
         case "joinMeetingReply":
           handleJoinedMeeting(message);
           break;
@@ -222,16 +219,6 @@ package org.bigbluebutton.modules.users.services
 	  														map.lockOnJoinConfigurable);
       UserManager.getInstance().getConference().setLockSettings(lockSettings);
     }
-
-    private function sendPrintingSlides(printing:Boolean):void {
-      MeetingModel.getInstance().printing = printing;
-      
-      var e:BBBEvent = new BBBEvent(BBBEvent.PRINT_SLIDES);
-      e.payload.remote = true;
-      e.payload.printing = printing;
-
-      dispatcher.dispatchEvent(e);
-    }
     
     private function sendRecordingStatusUpdate(recording:Boolean):void {
       MeetingModel.getInstance().recording = recording;
@@ -278,11 +265,6 @@ package org.bigbluebutton.modules.users.services
       MeetingModel.getInstance().meetingMuted = map.meetingMuted;
       
       UserManager.getInstance().getConference().applyLockSettings();
-    }
-
-    private function handlePrintButtonPressed(msg: Object):void {     
-      var map:Object = JSON.parse(msg.msg);
-      sendPrintingSlides(map.printing);      
     }
     
     private function handleGetRecordingStatusReply(msg: Object):void {     

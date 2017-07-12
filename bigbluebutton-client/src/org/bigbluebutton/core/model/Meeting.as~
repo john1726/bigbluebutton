@@ -10,7 +10,6 @@ package org.bigbluebutton.core.model
     private var _voiceConference:String;
     private var _dialNumber:String;
     private var _recorded:Boolean;
-    private var _printed:Boolean;
     private var _defaultLayout:String;
     private var _welcomeMessage:String;
     private var _modOnlyMessage:String;
@@ -29,7 +28,6 @@ package org.bigbluebutton.core.model
       _voiceConference = build.voiceConf;
       _dialNumber = build.dialNumber;
       _recorded = build.recorded;
-      _printed = build.printed;
       _defaultLayout = build.defaultLayout;
       _welcomeMessage = build.welcomeMessage;
       _modOnlyMessage = build.modOnlyMessage;
@@ -67,10 +65,6 @@ package org.bigbluebutton.core.model
     
     public function get recorded():Boolean {
       return _recorded;
-    }
-
-    public function get printed():Boolean {
-      return _printed;
     }
     
     public function get allowStartStopRecording():Boolean {
