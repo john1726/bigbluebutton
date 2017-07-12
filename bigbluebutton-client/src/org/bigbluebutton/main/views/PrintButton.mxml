@@ -128,7 +128,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 				d.dispatchEvent(event);
 
 				this.enabled = false;
-				LOGGER.debug("PrintButton:doPrintingSlides changing record status to {0}", [event.payload.printing]);
+				LOGGER.debug("PrintButton:doPrintingSlides changing printing status to {0}", [event.payload.printing]);
 				
 				//if (!recordingFlag && getLayoutOptions().logoutOnStopPrinting) {
 					//LOGGER.debug("Using 'logoutOnStopPrinting' option to logout user after stopping printing");
