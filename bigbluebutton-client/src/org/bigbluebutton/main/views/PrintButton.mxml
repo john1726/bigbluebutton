@@ -186,13 +186,14 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			
 			private function onPrintButtonMouseOver(event:MouseEvent):void {
 				//if (UserManager.getInstance().getConference().amIModerator()) {
+					this.styleName = "printButtonStyleNormal";
 				//	this.styleName = this.selected? "printButtonStyleStop": "printButtonStyleStart";
 				//}
 			}
 
 			private function onPrintButtonMouseOut(event:MouseEvent):void {
 				//if (UserManager.getInstance().getConference().amIModerator()) {
-				//	this.styleName = this.selected? "printButtonStyleStart": "printButtonStyleNormal";
+					this.styleName = "printButtonStyleNormal";
 				//}
 			}
 
@@ -200,6 +201,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 				super.resourcesChanged();
 
 				//this.styleName = this.selected? "printButtonStyleStart": "printButtonStyleNormal";
+                                this.styleName = "printButtonStyleNormal";
 
 				//if (UserManager.getInstance().getConference().amIModerator() && MeetingModel.getInstance().meeting.allowStartStopPrinting) {
 					//if (this.selected) {
@@ -209,7 +211,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 					//}
 				//} else {
 					//if (this.selected) {
-						//this.toolTip = ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.printing');
+						this.toolTip = ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.printing');
 					//} else {
 						//this.toolTip = ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.notPrinting');
 					//}

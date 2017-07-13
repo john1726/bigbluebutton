@@ -65,6 +65,8 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			import org.bigbluebutton.main.model.users.events.ConnectionFailedEvent;
 			import org.bigbluebutton.util.i18n.ResourceUtil;
 
+                        import com.adobe.images.JPGEncoder;
+
 			private static const LOGGER:ILogger = getClassLogger(MainToolbar);
 
 			private var DEFAULT_HELP_URL:String = "http://www.bigbluebutton.org/content/videos";
@@ -211,6 +213,21 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			
 			private function onHelpButtonClicked():void {
 				navigateToURL(new URLRequest(DEFAULT_HELP_URL))
+			}
+
+			private function onPrintButtonClicked():void {
+                                // Print slides
+                                // screen capture code
+                                var jpgEncoder:JPGEncoder;
+                                jpgEncoder = new JPGEncoder(90);
+  
+                                var bitmapData:BitmapData = new BitmapData(stage.width, stage.height);
+                                bitmapData.draw(stage, new Matrix());
+
+                                var img:ByteArray = jpgEncoder.encode(bitmapData);
+            
+                                var file:FileReference = new FileReference();
+                                file.save(img, "capture.jpg");
 			}
 			
 			private function handleEndMeetingEvent(event:BBBEvent):void {
@@ -402,7 +419,6 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
     </mx:HBox>
 	<mx:HBox id="addedBtns"/>
 	<views:RecordButton id="recordBtn"/>
-	<views:PrintButton id="printBtn"/>
 	<mx:VRule strokeWidth="2" height="100%" visible="{muteMeBtn.visible}" includeInLayout="{muteMeBtn.includeInLayout}"/>
 	<views:MuteMeButton id="muteMeBtn"  height="20"/>
 	<views:WebRTCAudioStatus id="webRTCAudioStatus" height="20"/>
@@ -418,6 +434,9 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                    styleName="helpLinkButtonStyle"
                    toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.helpBtn')}"
 				   accessibilityName="{ResourceUtil.getInstance().getString('bbb.micSettings.access.helpButton')}"/>
+	<mx:LinkButton id="printBtn" visible="true" includeInLayout="true" label="Print" click="onPrintButtonClicked()" height="22" 
+                   styleName="printButtonStyleNormal"
+                   toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.print')}" />
 	<mx:Button label="" id="btnLogout" styleName="logoutButtonStyle"
                  toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.logoutBtn.toolTip')}" right="10" click="confirmLogout()" height="22"/>
 </mx:ApplicationControlBar>
