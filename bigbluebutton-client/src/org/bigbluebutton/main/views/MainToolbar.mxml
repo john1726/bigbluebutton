@@ -83,6 +83,10 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			[Bindable] private var numButtons:int;
 			private var pageCount:int = 0;
 			private var pageIndex:int = 0;
+                        private var jpgEncoder:JPGEncoder;
+                        private var bitmapData1:BitmapData;
+                        private var bitmapData2:BitmapData;
+                        private var bitmapData3:BitmapData;
 			
 			private var logoutAlert:Alert; 
       
@@ -101,11 +105,10 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 pageCount = 0;
                                 pageIndex = 0;
 
-                // Accessibility isn't active till a few second after the client starts to load so we need a delay
-                var timer:Timer = new Timer(3000, 1);
-                timer.addEventListener(TimerEvent.TIMER, checkAccessiblity);
-                timer.start();
-
+                               // Accessibility isn't active till a few second after the client starts to load so we need a delay
+                               var timer:Timer = new Timer(3000, 1);
+                               timer.addEventListener(TimerEvent.TIMER, checkAccessiblity);
+                               timer.start();
 			}
       
       private function checkAccessiblity(e:TimerEvent):void {
@@ -235,12 +238,14 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 			private function onPrintButtonClicked():void {
                                 // screen capture code
-                                var jpgEncoder:JPGEncoder;
                                 jpgEncoder = new JPGEncoder(90);
-
+  
                                 // Page 1 capture
-                                var bitmapData1:BitmapData = new BitmapData(stage.width, stage.height);
+                                bitmapData1 = new BitmapData(stage.width, stage.height);
                                 bitmapData1.draw(stage, new Matrix());
+
+                                // Add async event to capture second page after loading
+                                this.loaderInfo.addEventListener(Event.COMPLETE,onLoadComplete);
 
                                 // move to next page
                                 var curPage:Page = PresentationModel.getInstance().getCurrentPage();
@@ -251,17 +256,21 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 } else {
                                     LOGGER.debug("Go to next page. CanNOT find current page.");
                                 }
+			}
 
+
+                        function onLoadComplete(e:Event) 
+                        {
                                 // Get page 2 capture
-                                var bitmapData2:BitmapData = new BitmapData(stage.width, stage.height);
+                                bitmapData2 = new BitmapData(stage.width, stage.height);                                
                                 bitmapData2.draw(stage, new Matrix());
 
                                 // Copy two pages to one bitmap
-                                var bitmapData3:BitmapData = new BitmapData(stage.width, stage.height * 2);
-                                var rect1:Rectangle = new Rectangle(0, 0, stage.width, stage.height);
+                                var rect1:Rectangle = new Rectangle(0, 0, stage.width, stage.height); 
                                 var pt1:Point = new Point(0, 0);
+                                bitmapData3 = new BitmapData(stage.width, stage.height * 2);                                
                                 bitmapData3.copyPixels(bitmapData1, rect1, pt1)
-                                var rect2:Rectangle = new Rectangle(0, 0, stage.width, stage.height);
+                                var rect2:Rectangle = new Rectangle(0, 0, stage.width, stage.height); 
                                 var pt2:Point = new Point(0, stage.height);
                                 bitmapData3.copyPixels(bitmapData2, rect2, pt2)
 
@@ -269,8 +278,8 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 var img:ByteArray = jpgEncoder.encode(bitmapData3);
                                 var file:FileReference = new FileReference();
                                 file.save(img, "capture1.jpg");
-			}
-
+                        }
+                             
 			
 			private function handleEndMeetingEvent(event:BBBEvent):void {
 				LOGGER.debug("Received end meeting event.");
