@@ -66,6 +66,9 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			import org.bigbluebutton.util.i18n.ResourceUtil;
 
                         import com.adobe.images.JPGEncoder;
+                        import org.bigbluebutton.modules.present.commands.GoToNextPageCommand;
+                        import org.bigbluebutton.modules.present.model.Page;
+                        import org.bigbluebutton.modules.present.model.PresentationModel;
 
 			private static const LOGGER:ILogger = getClassLogger(MainToolbar);
 
@@ -78,6 +81,8 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			[Bindable] private var showToolbar:Boolean = false;
 			[Bindable] public var toolbarOptions:LayoutOptions = new LayoutOptions();		
 			[Bindable] private var numButtons:int;
+			private var pageCount:int = 0;
+			private var pageIndex:int = 0;
 			
 			private var logoutAlert:Alert; 
       
@@ -93,7 +98,9 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			
 			private function init():void{
 				numButtons = 0;
-                
+                                pageCount = 0;
+                                pageIndex = 0;
+
                 // Accessibility isn't active till a few second after the client starts to load so we need a delay
                 var timer:Timer = new Timer(3000, 1);
                 timer.addEventListener(TimerEvent.TIMER, checkAccessiblity);
@@ -128,6 +135,17 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			  break;
          }
        }
+
+      private function gotoNextSlide():void {
+          var curPage:Page = PresentationModel.getInstance().getCurrentPage();
+          if (curPage != null) {
+            LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
+            pageCount++;
+            dispatchEvent(new GoToNextPageCommand(curPage.id));
+          } else {
+            LOGGER.debug("Go to next page. CanNOT find current page.");
+          }
+      }
 								
 			public function displayToolbar():void{
 				toolbarOptions = new LayoutOptions();
@@ -216,19 +234,43 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			}
 
 			private function onPrintButtonClicked():void {
-                                // Print slides
                                 // screen capture code
                                 var jpgEncoder:JPGEncoder;
                                 jpgEncoder = new JPGEncoder(90);
-  
-                                var bitmapData:BitmapData = new BitmapData(stage.width, stage.height);
-                                bitmapData.draw(stage, new Matrix());
 
-                                var img:ByteArray = jpgEncoder.encode(bitmapData);
-            
+                                // Page 1 capture
+                                var bitmapData1:BitmapData = new BitmapData(stage.width, stage.height);
+                                bitmapData1.draw(stage, new Matrix());
+
+                                // move to next page
+                                var curPage:Page = PresentationModel.getInstance().getCurrentPage();
+                                if (curPage != null) {
+                                    LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
+                                    pageCount++;
+                                    dispatchEvent(new GoToNextPageCommand(curPage.id));
+                                } else {
+                                    LOGGER.debug("Go to next page. CanNOT find current page.");
+                                }
+
+                                // Get page 2 capture
+                                var bitmapData2:BitmapData = new BitmapData(stage.width, stage.height);
+                                bitmapData2.draw(stage, new Matrix());
+
+                                // Copy two pages to one bitmap
+                                var bitmapData3:BitmapData = new BitmapData(stage.width, stage.height * 2);
+                                var rect1:Rectangle = new Rectangle(0, 0, stage.width, stage.height);
+                                var pt1:Point = new Point(0, 0);
+                                bitmapData3.copyPixels(bitmapData1, rect1, pt1)
+                                var rect2:Rectangle = new Rectangle(0, 0, stage.width, stage.height);
+                                var pt2:Point = new Point(0, stage.height);
+                                bitmapData3.copyPixels(bitmapData2, rect2, pt2)
+
+                                // Convert to image
+                                var img:ByteArray = jpgEncoder.encode(bitmapData3);
                                 var file:FileReference = new FileReference();
-                                file.save(img, "capture.jpg");
+                                file.save(img, "capture1.jpg");
 			}
+
 			
 			private function handleEndMeetingEvent(event:BBBEvent):void {
 				LOGGER.debug("Received end meeting event.");
@@ -434,7 +476,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                    styleName="helpLinkButtonStyle"
                    toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.helpBtn')}"
 				   accessibilityName="{ResourceUtil.getInstance().getString('bbb.micSettings.access.helpButton')}"/>
-	<mx:LinkButton id="printBtn" visible="true" includeInLayout="true" label="Print" click="onPrintButtonClicked()" height="22" 
+	<mx:LinkButton id="printBtn" visible="true" includeInLayout="true" label="Capture" click="onPrintButtonClicked()" height="22" 
                    styleName="printButtonStyleNormal"
                    toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.print')}" />
 	<mx:Button label="" id="btnLogout" styleName="logoutButtonStyle"
