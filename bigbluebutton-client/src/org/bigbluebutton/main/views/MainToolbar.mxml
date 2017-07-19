@@ -42,6 +42,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
   
 	<mx:Script>
 		<![CDATA[
+                        import flash.events.Event; 
 			import com.asfusion.mate.events.Dispatcher;
 			
 			import mx.controls.Alert;
@@ -50,6 +51,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 			
 			import org.as3commons.logging.api.ILogger;
 			import org.as3commons.logging.api.getClassLogger;
+                        import org.bigbluebutton.main.api.JSLog;
 			import org.bigbluebutton.common.IBbbToolbarComponent;
 			import org.bigbluebutton.common.events.ToolbarButtonEvent;
 			import org.bigbluebutton.core.BBB;
@@ -236,16 +238,19 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 				navigateToURL(new URLRequest(DEFAULT_HELP_URL))
 			}
 
-			private function onPrintButtonClicked():void {
+                        private function onCaptureButtonClicked():void {
+                                var logData:Object = new Object();       
+                                JSLog.debug("MainToolbar.mxml: onCaptureButtonClicked() called", logData);
+
+                                // Add async event to capture second page after loading
+                                stage.loaderInfo.addEventListener(Event.COMPLETE,onLoadComplete);
+
                                 // screen capture code
                                 jpgEncoder = new JPGEncoder(90);
   
                                 // Page 1 capture
                                 bitmapData1 = new BitmapData(stage.width, stage.height);
                                 bitmapData1.draw(stage, new Matrix());
-
-                                // Add async event to capture second page after loading
-                                this.loaderInfo.addEventListener(Event.COMPLETE,onLoadComplete);
 
                                 // move to next page
                                 var curPage:Page = PresentationModel.getInstance().getCurrentPage();
@@ -256,11 +261,13 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 } else {
                                     LOGGER.debug("Go to next page. CanNOT find current page.");
                                 }
-			}
+                        }
 
 
-                        function onLoadComplete(e:Event) 
-                        {
+			private function onPrintButtonClicked():void {
+                                var logData:Object = new Object();       
+                                JSLog.debug("MainToolbar.mxml: onPrintButtonClicked() called", logData);
+
                                 // Get page 2 capture
                                 bitmapData2 = new BitmapData(stage.width, stage.height);                                
                                 bitmapData2.draw(stage, new Matrix());
@@ -275,11 +282,31 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 bitmapData3.copyPixels(bitmapData2, rect2, pt2)
 
                                 // Convert to image
+                                // TODO: figure out why bitmapData3 is null, i.e., why OnLoadComplete doesn't get called
                                 var img:ByteArray = jpgEncoder.encode(bitmapData3);
                                 var file:FileReference = new FileReference();
-                                file.save(img, "capture1.jpg");
-                        }
-                             
+                                file.save(img, "capture1.jpg");                        
+			}
+
+
+                        private function onLoadComplete(e:Event) 
+                        {
+                                var logData:Object = new Object();       
+                                JSLog.debug("MainToolbar.mxml: onLoadComplete() called", logData);
+
+                                // Get page 2 capture
+                                bitmapData2 = new BitmapData(stage.width, stage.height);                                
+                                bitmapData2.draw(stage, new Matrix());
+
+                                // Copy two pages to one bitmap
+                                var rect1:Rectangle = new Rectangle(0, 0, stage.width, stage.height); 
+                                var pt1:Point = new Point(0, 0);
+                                bitmapData3 = new BitmapData(stage.width, stage.height * 2);                                
+                                bitmapData3.copyPixels(bitmapData1, rect1, pt1)
+                                var rect2:Rectangle = new Rectangle(0, 0, stage.width, stage.height); 
+                                var pt2:Point = new Point(0, stage.height);
+                                bitmapData3.copyPixels(bitmapData2, rect2, pt2)
+                        }                             
 			
 			private function handleEndMeetingEvent(event:BBBEvent):void {
 				LOGGER.debug("Received end meeting event.");
@@ -448,7 +475,7 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 	
 	<common:TabIndexer id="quickLinksIndexer" startIndex="102" tabIndices="{[usersLinkBtn, webcamLinkButton, presentationLinkBtn, chatLinkBtn, captionLinkBtn]}"/>
 	<common:TabIndexer id="buttonsIndexer" startIndex="{quickLinksIndexer.startIndex + numButtons + 10}"
-					   tabIndices="{[recordBtn, muteMeBtn, webRTCAudioStatus, printBtn, shortcutKeysBtn, helpBtn, btnLogout]}"/>
+					   tabIndices="{[recordBtn, muteMeBtn, webRTCAudioStatus, captureBtn, printBtn, shortcutKeysBtn, helpBtn, btnLogout]}"/>
 
     
     <mx:HBox id="quickLinks" width="1" includeInLayout="false">
@@ -485,7 +512,10 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                    styleName="helpLinkButtonStyle"
                    toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.helpBtn')}"
 				   accessibilityName="{ResourceUtil.getInstance().getString('bbb.micSettings.access.helpButton')}"/>
-	<mx:LinkButton id="printBtn" visible="true" includeInLayout="true" label="Capture" click="onPrintButtonClicked()" height="22" 
+	<mx:LinkButton id="captureBtn" visible="true" includeInLayout="true" label="Capture" click="onCaptureButtonClicked()" height="22" 
+                   styleName="captureButtonStyleNormal"
+                   toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.captureBtn.toolTip.capture')}" />                       
+	<mx:LinkButton id="printBtn" visible="true" includeInLayout="true" label="Save" click="onPrintButtonClicked()" height="22" 
                    styleName="printButtonStyleNormal"
                    toolTip="{ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.toolTip.print')}" />
 	<mx:Button label="" id="btnLogout" styleName="logoutButtonStyle"
