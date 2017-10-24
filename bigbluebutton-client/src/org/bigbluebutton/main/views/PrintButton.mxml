@@ -78,18 +78,18 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 				// need to save the flag in case of any remote update on the printing status
 				printingFlag = true;
 
-				//var message:String = printingFlag;
+				var message:String = printingFlag.toString();
 
 				// Confirm logout using built-in alert
-				//var alert:Alert = Alert.show(message, ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.confirm.title'), Alert.YES | Alert.NO, this, alertPrintingSlides, null, Alert.YES);
+				var alert:Alert = Alert.show(message, ResourceUtil.getInstance().getString('bbb.mainToolbar.printBtn.confirm.title'), Alert.YES | Alert.NO, this, alertPrintingSlides, null, Alert.YES);
         
                                 // ???
 				var newX:Number = this.x;
 				var newY:Number = this.y + this.height + 5;
 
-				//alert.validateNow();
-				//alert.move(newX, newY);
-				//Accessibility.updateProperties();
+				alert.validateNow();
+				alert.move(newX, newY);
+				Accessibility.updateProperties();
 
                                 // Print slides
                                 // screen capture code

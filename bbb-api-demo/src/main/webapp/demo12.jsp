@@ -209,6 +209,8 @@ Author: Jesus Federico <jesus@123it.ca>
 		//
 		String url = BigBlueButtonURL.replace("bigbluebutton/","demo/");
 		String joinURL = getJoinURLwithDynamicConfigXML(username, confname, configXML);
+                System.out.println ("Join moderator demo12 url:" + joinURL);
+                System.out.println ("Join moderator demo12 configXML:" + configXML);
 
 		if (joinURL.startsWith("http://") || joinURL.startsWith("https://")) { 
 %>
