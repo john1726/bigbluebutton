@@ -254,14 +254,15 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 bitmapData1.draw(stage, new Matrix());
 
                                 // move to next page
-                                var curPage:Page = PresentationModel.getInstance().getCurrentPage();
-                                if (curPage != null) {
-                                    LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
-                                    pageCount++;
-                                    dispatchEvent(new GoToNextPageCommand(curPage.id));
-                                } else {
-                                    LOGGER.debug("Go to next page. CanNOT find current page.");
-                                }
+                                //var curPage:Page = PresentationModel.getInstance().getCurrentPage();
+                                //if (curPage != null) {
+                                    //LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
+                                    //JSLog.debug("MainToolbar.mxml::onCaptureButtonClicked: pageCount = " + pageCount, logData);
+                                    //pageCount++;
+                                    //dispatchEvent(new GoToNextPageCommand(curPage.id));
+                                //} else {
+                                    //LOGGER.debug("Go to next page. CanNOT find current page.");
+                                //}
                                 bitmapData3 = new BitmapData(stage.width, stage.height * 9);                                
 
                                 // copy first page into resulting bitmapData3
@@ -280,6 +281,17 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 var logData:Object = new Object();       
                                 JSLog.debug("MainToolbar.mxml: captureNextPage(e:TimerEvent) called", logData);
 
+                                // move to next page
+                                var curPage:Page = PresentationModel.getInstance().getCurrentPage();
+                                if (curPage != null) {
+                                    LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
+                                    JSLog.debug("MainToolbar.mxml::captureNextPage: pageCount = " + pageCount, logData);
+                                    pageCount++;
+                                    dispatchEvent(new GoToNextPageCommand(curPage.id));
+                                } else {
+                                    LOGGER.debug("Go to next page. CanNOT find current page.");
+                                }
+
                                 // Get next page capture
                                 bitmapData2 = new BitmapData(stage.width, stage.height);                                
                                 bitmapData2.draw(stage, new Matrix());
@@ -288,24 +300,15 @@ with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
                                 var rect2:Rectangle = new Rectangle(0, 0, stage.width, stage.height); 
                                 var pt2:Point = new Point(0, stage.height * pageIndex);
                                 bitmapData3.copyPixels(bitmapData2, rect2, pt2)
-                                JSLog.debug("MainToolbar.mxml: pageIndex = " + pageIndex, logData);
+                                JSLog.debug("MainToolbar.mxml::captureNextPage: pageIndex = " + pageIndex, logData);
                                 pageIndex++;
-
-                                // move to next page
-                                var curPage:Page = PresentationModel.getInstance().getCurrentPage();
-                                if (curPage != null) {
-                                    LOGGER.debug("Go to next page. Current page [{0}]", [curPage.id]);
-                                    pageCount++;
-                                    dispatchEvent(new GoToNextPageCommand(curPage.id));
-                                } else {
-                                    LOGGER.debug("Go to next page. CanNOT find current page.");
-                                }
-
                         }
 
 			private function onPrintButtonClicked():void {
                                 var logData:Object = new Object();       
                                 JSLog.debug("MainToolbar.mxml: onPrintButtonClicked() called", logData);
+                                pageIndex = 1;
+                                pageCount = 0;
 
                                 // Get page 2 capture
                                 //bitmapData2 = new BitmapData(stage.width, stage.height);                                
